@@ -99,18 +99,31 @@ int main() {
           *
           */
 
-            // start by transforming the points to be in car's co-ordinate system
-            // shift car reference angle to 90 degrees
+          // start by transforming the points to be in car's co-ordinate system
+          // shift car reference angle to 90 degrees
 
-            for (int i=0;i < ptsx .size(); ++i)
-            {
-                double shift_x = ptsx[i] - px;
-                double shift_y = ptsy[i] - py;
+          for (int i=0;i < ptsx .size(); ++i)
+          {
+              double shift_x = ptsx[i] - px;
+              double shift_y = ptsy[i] - py;
 
-                ptsx[i] = (shift_x * cos (0-psi) - shift_y * sin (0 - psi));
-                ptsy[i] = (shift_x * sin (0-psi) + shift_y * cos (0 - psi));
-            }
+              ptsx[i] = (shift_x * cos (0-psi) - shift_y * sin (0 - psi));
+              ptsy[i] = (shift_x * sin (0-psi) + shift_y * cos (0 - psi));
+          }
 
+          /* Next we have to find the coefficients for fitting the polynomial
+          / Let's use the given function polyfit to "fit" the polynomial using 3rd degree power
+           We have to makesure we pass vectors as Eigen vectors topolyfit
+           */
+
+          double* ptrx = &ptsx[0];
+          Eigen::Map<Eigen::VectorXd> ptsx_transform(ptrx, 6);
+
+
+          double* ptry = &ptsx[0];
+          Eigen::Map<Eigen::VectorXd> ptsy_transform(ptry, 6);
+
+          auto coeffs = polyfit (ptsx_transform, ptsy_transform, 3 );
 
           double steer_value;
           double throttle_value;
