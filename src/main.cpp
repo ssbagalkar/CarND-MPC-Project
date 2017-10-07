@@ -125,6 +125,14 @@ int main() {
 
           auto coeffs = polyfit (ptsx_transform, ptsy_transform, 3 );
 
+          // calculate cross track error(cte)
+
+          double cte = polyeval(coeffs,0);
+
+          //calculate orientation error
+          // double epsi = psi - atan ( coeffs[1] + 2 * px * coeffs[2] + 3 * px * coeffs[3] * pow (px,2));
+          double epsi = - atan(coeffs[1]);//as psi and px are 0
+
           double steer_value;
           double throttle_value;
 
