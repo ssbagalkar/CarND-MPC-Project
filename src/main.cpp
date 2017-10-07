@@ -98,6 +98,20 @@ int main() {
           * Both are in between [-1, 1].
           *
           */
+
+            // start by transforming the points to be in car's co-ordinate system
+            // shift car reference angle to 90 degrees
+
+            for (int i=0;i < ptsx .size(); ++i)
+            {
+                double shift_x = ptsx[i] - px;
+                double shift_y = ptsy[i] - py;
+
+                ptsx[i] = (shift_x * cos (0-psi) - shift_y * sin (0 - psi));
+                ptsy[i] = (shift_x * sin (0-psi) + shift_y * cos (0 - psi));
+            }
+
+
           double steer_value;
           double throttle_value;
 
@@ -175,7 +189,7 @@ int main() {
   });
 
   int port = 4567;
-  if (h.listen(port)) {
+  if (h.listen("0.0.0.0",port)) {
     std::cout << "Listening to port " << port << std::endl;
   } else {
     std::cerr << "Failed to listen to port" << std::endl;
