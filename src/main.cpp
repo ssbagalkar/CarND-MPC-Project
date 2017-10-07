@@ -133,6 +133,13 @@ int main() {
           // double epsi = psi - atan ( coeffs[1] + 2 * px * coeffs[2] + 3 * px * coeffs[3] * pow (px,2));
           double epsi = - atan(coeffs[1]);//as psi and px are 0
 
+          // Create the state vector
+          Eigen::VectorXd state(6);
+          state << 0, 0, 0, v, cte, epsi ;
+
+          // Call the solver
+
+          auto vars = mpc.Solver (state, coeffs);
           double steer_value;
           double throttle_value;
 
