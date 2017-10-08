@@ -139,7 +139,7 @@ int main() {
 
           // Call the solver
 
-          auto vars = mpc.Solver (state, coeffs);
+          auto vars = mpc.Solve (state, coeffs);
           double steer_value;
           double throttle_value;
 
