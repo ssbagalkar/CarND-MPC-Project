@@ -129,12 +129,12 @@ class FG_eval {
           // v_[t+1] = v[t] + a[t] * dt
           // cte[t+1] = f(x[t]) - y[t] + v[t] * sin(epsi[t]) * dt
           // epsi[t+1] = psi[t] - psides[t] + v[t] * delta[t] / Lf * dt
-          fg[1 + x_start + t] = x1 - (x0 + v0 * CppAD::cos(psi0) * dt);
-          fg[1 + y_start + t] = y1 - (y0 + v0 * CppAD::sin(psi0) * dt);
-          fg[1 + psi_start + t] = psi1 - (psi0 + v0 * delta0 / Lf * dt);
-          fg[1 + v_start + t] = v1 - (v0 + a0 * dt);
-          fg[1 + cte_start + t] = cte1 - ((f0 - y0) + (v0 * CppAD::sin(epsi0) * dt));
-          fg[1 + epsi_start + t] = epsi1 - ((psi0 - psides0) + v0 * delta0 / Lf * dt);
+          fg[2 + x_start + t] = x1 - (x0 + v0 * CppAD::cos(psi0) * dt);
+          fg[2 + y_start + t] = y1 - (y0 + v0 * CppAD::sin(psi0) * dt);
+          fg[2 + psi_start + t] = psi1 - (psi0 + v0 * delta0 / Lf * dt);
+          fg[2 + v_start + t] = v1 - (v0 + a0 * dt);
+          fg[2 + cte_start + t] = cte1 - ((f0 - y0) + (v0 * CppAD::sin(epsi0) * dt));
+          fg[2 + epsi_start + t] = epsi1 - ((psi0 - psides0) + v0 * delta0 / Lf * dt);
   }
 };
 
@@ -149,14 +149,22 @@ vector<double> MPC::Solve(Eigen::VectorXd state, Eigen::VectorXd coeffs) {
   size_t i;
   typedef CPPAD_TESTVECTOR(double) Dvector;
 
+    //extract the values
+    double x = x0[0];
+    double y = x0[1];
+    double psi = x0[2];
+    double v = x0[3];
+    double cte = x0[4];
+    double epsi = x0[5];
+
   // TODO: Set the number of model variables (includes both states and inputs).
   // For example: If the state is a 4 element vector, the actuators is a 2
   // element vector and there are 10 timesteps. The number of variables is:
   //
   // 4 * 10 + 2 * 9
-  size_t n_vars = 0;
+  size_t n_vars =  N * 6 + (N-1) * 2;
   // TODO: Set the number of constraints
-  size_t n_constraints = 0;
+  size_t n_constraints = N * 6;
 
   // Initial value of the independent variables.
   // SHOULD BE 0 besides initial state.
@@ -177,7 +185,15 @@ vector<double> MPC::Solve(Eigen::VectorXd state, Eigen::VectorXd coeffs) {
     constraints_lowerbound[i] = 0;
     constraints_upperbound[i] = 0;
   }
+  // Set the initial variable values
+  vars[x_start] = x;
+  vars[y_start] = y;
+  vars[psi_start] = psi;
+  vars[v_start] = v;
+  vars[cte_start] = cte;
+  vars[epsi_start] = epsi;
 
+  
   // object that computes objective and constraints
   FG_eval fg_eval(coeffs);
 
