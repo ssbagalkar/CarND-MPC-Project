@@ -102,7 +102,7 @@ int main() {
           // start by transforming the points to be in car's co-ordinate system
           // shift car reference angle to 90 degrees
 
-          for (int i=0;i < ptsx .size(); ++i)
+          for (int i=0;i < ptsx .size(); i++)
           {
               double shift_x = ptsx[i] - px;
               double shift_y = ptsy[i] - py;
@@ -188,7 +188,7 @@ int main() {
           int num_points = 25;
           //.. add (x,y) points to list here, points are in reference to the vehicle's coordinate system
           // the points in the simulator are connected by a Yellow line
-          for ( int i = 0; i < num_points; ++i)
+          for ( int i = 0; i < num_points; i++)
           {
             next_x_vals.push_back(poly_inc * i);
             next_y_vals.push_back(polyeval(coeffs,poly_inc * i));
