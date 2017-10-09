@@ -107,8 +107,8 @@ int main() {
               double shift_x = ptsx[i] - px;
               double shift_y = ptsy[i] - py;
 
-              ptsx[i] = (shift_x * cos (0-psi) - shift_y * sin (0 - psi));
-              ptsy[i] = (shift_x * sin (0-psi) + shift_y * cos (0 - psi));
+            ptsx[i] = (shift_x * cos (0-psi) - shift_y * sin (0 - psi));
+            ptsy[i] = (shift_x * sin (0-psi) + shift_y * cos (0 - psi));
           }
 
           /* Next we have to find the coefficients for fitting the polynomial
@@ -131,7 +131,7 @@ int main() {
 
           //calculate orientation error
           // double epsi = psi - atan ( coeffs[1] + 2 * px * coeffs[2] + 3 * px * coeffs[3] * pow (px,2));
-          double epsi = - atan(coeffs[1]);//as psi and px are 0
+          double epsi = -atan(coeffs[1]);//as psi and px are 0
 
           // Create the state vector
           Eigen::VectorXd state(6);
@@ -147,10 +147,10 @@ int main() {
           json msgJson;
           // NOTE: Remember to divide by deg2rad(25) before you send the steering value back.
           // Otherwise the values will be in between [-deg2rad(25), deg2rad(25] instead of [-1, 1].
-          msgJson["steering_angle"] = steer_value/(deg2rad(25)*Lf);
+          msgJson["steering_angle"] = steer_value/(deg2rad(25));
           msgJson["throttle"] = throttle_value;
 
-          std::cout << "steering angle" << std::endl << steer_value/(deg2rad(25)*Lf) << std::endl;
+          std::cout << "steering angle" << std::endl << steer_value/(deg2rad(25)) << std::endl;
           std::cout << "throttle" << std::endl << throttle_value << std::endl;
 
           //Display the MPC predicted trajectory 
