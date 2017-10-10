@@ -91,6 +91,8 @@ int main() {
           double py = j[1]["y"];
           double psi = j[1]["psi"];
           double v = j[1]["speed"];
+          double delta = j[1]["steering_angle"];
+          double a = j[1]["throttle"];
 
           /*
           * TODO: Calculate steering angle and throttle using MPC.
@@ -133,9 +135,21 @@ int main() {
           // double epsi = psi - atan ( coeffs[1] + 2 * px * coeffs[2] + 3 * px * coeffs[3] * pow (px,2));
           double epsi = -atan(coeffs[1]);//as psi and px are 0
 
+
+          double Lf = 2.67;
+
+          // define latency value
+          const double latency = 0.1;
+
+          double est_px = v * latency ;//cos(0)=1 and px=0
+          double est_py = 0.0;//sin(0)=0;
+          double est_psi = 0.0 + v * -delta /Lf * latency;
+          double est_v = v + a * latency;
+          double est_cte = cte + v * sin (epsi) * latency;
+          double est_epsi = epsi + v * -delta /Lf * latency;
           // Create the state vector
           Eigen::VectorXd state(6);
-          state << 0, 0, 0, v, cte, epsi ;
+          state << est_px, est_py, est_psi, est_v, est_cte, est_epsi ;
           //std::cout <<"state : " << std::endl << state <<std::endl;
           // Call the solver
 
@@ -143,7 +157,7 @@ int main() {
           double steer_value = -vars[0];
           double throttle_value = vars[1];
 
-          double Lf = 2.67;
+
           json msgJson;
           // NOTE: Remember to divide by deg2rad(25) before you send the steering value back.
           // Otherwise the values will be in between [-deg2rad(25), deg2rad(25] instead of [-1, 1].
